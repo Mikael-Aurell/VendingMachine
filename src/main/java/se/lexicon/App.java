@@ -1,13 +1,16 @@
 package se.lexicon;
 
-/**
- * Hello world!
- *
- */
-public class App 
+
+import se.lexicon.data.ProductData;
+import se.lexicon.data.ProductDataImpl;
+
+public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+        ProductData productData = new ProductDataImpl();
+        while(true){
+
+        }
     }
 }
