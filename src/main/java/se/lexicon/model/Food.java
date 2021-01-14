@@ -2,29 +2,38 @@ package se.lexicon.model;
 
 import java.util.Objects;
 
-public abstract class Food extends Product {
-
-    private int calories;
+public class Food extends Product {
+    private String calories;
     private Protein protein;
 
     public Food(){
-
     }
 
-    public Food(int productId, String name, int price, int calories, Protein protein) {
+    public Food(int productId, String name, int price, String calories, Protein protein) {
         super(productId, name, price);
         this.calories = calories;
         this.protein = protein;
     }
 
+    @Override
+    public String Examine(){
+        return "Name: " + getName() + " " +
+                "Price " + getPrice() + " " +
+                "Calories " + getCalories() + " " +
+                "Protein" + getProteinType();
+    }
+
+    @Override
+    public String Use(){
+        return "consumed";
+    }
+
     //Generate getters/setters
-
-
-    public int getCalories() {
+    public String getCalories() {
         return calories;
     }
 
-    public void setCalories(int calories) {
+    public void setCalories(String calories) {
         this.calories = calories;
     }
 
@@ -52,10 +61,9 @@ public abstract class Food extends Product {
     }
 
     //Generate toString
-
     @Override
     public String toString() {
-        return "Food{" +
+        return super.toString()+"Food{" +
                 "calories=" + calories +
                 ", protein=" + protein +
                 '}';

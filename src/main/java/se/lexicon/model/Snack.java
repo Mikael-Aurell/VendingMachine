@@ -2,8 +2,9 @@ package se.lexicon.model;
 
 import java.util.Objects;
 
-public abstract class Snack extends Product {
+public class Snack extends Product {
 
+    //Todo: add calories
     private String sugarPercent;
     private int quantity;
     private SnackType snackType;
@@ -18,8 +19,20 @@ public abstract class Snack extends Product {
         this.snackType = snackType;
     }
 
-    //Generate Getter/Setters
+    @Override
+    public String Examine(){
+        return "Name: " + getName() + " " +
+                "Price " + getPrice() + " " +
+                "SugarPercent " + getSugarPercent() + " " +
+                "Type of Snack" + getSnackType();
+    }
 
+    @Override
+    public String Use(){
+        return "consumed";
+    }
+
+    //Generate Getter/Setters
     public String getSugarPercent() {
         return sugarPercent;
     }
@@ -65,7 +78,7 @@ public abstract class Snack extends Product {
 
     @Override
     public String toString() {
-        return "Snack{" +
+        return super.toString()+"Snack{" +
                 "sugarPercent='" + sugarPercent + '\'' +
                 ", quantity=" + quantity +
                 ", snackType=" + snackType +

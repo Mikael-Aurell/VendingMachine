@@ -2,19 +2,19 @@ package se.lexicon.model;
 
 import java.util.Objects;
 
-public abstract class Drink extends Product {
+public class Drink extends Product {
 
     private String volume;
-    private String cal;
+    private String calories;
     private boolean carbonic_acid;
 
     public Drink(){
     }
 
-    public Drink(int productId, String name, int price, String volume, String cal, boolean carbonic_acid) {
+    public Drink(int productId, String name, int price, String volume, String calories, boolean carbonic_acid) {
         super(productId, name, price);
         this.volume = volume;
-        this.cal = cal;
+        this.calories = calories;
         this.carbonic_acid = carbonic_acid;
     }
 
@@ -22,7 +22,7 @@ public abstract class Drink extends Product {
     public String Examine(){
         return "Name: " + getName() + " " +
                 "Price " + getPrice() + " " +
-                "Calories " + getCal();
+                "Calories " + getCalories();
     }
 
     @Override
@@ -39,12 +39,12 @@ public abstract class Drink extends Product {
         this.volume = volume;
     }
 
-    public String getCal() {
-        return cal;
+    public String getCalories() {
+        return calories;
     }
 
-    public void setCal(String cal) {
-        this.cal = cal;
+    public void setCalories(String calories) {
+        this.calories = calories;
     }
 
     public boolean isCarbonic_acid() {
@@ -63,20 +63,20 @@ public abstract class Drink extends Product {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Drink drink = (Drink) o;
-        return carbonic_acid == drink.carbonic_acid && Objects.equals(volume, drink.volume) && Objects.equals(cal, drink.cal);
+        return carbonic_acid == drink.carbonic_acid && Objects.equals(volume, drink.volume) && Objects.equals(calories, drink.calories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), volume, cal, carbonic_acid);
+        return Objects.hash(super.hashCode(), volume, calories, carbonic_acid);
     }
 
     //Generate toString
     @Override
     public String toString() {
-        return "Drink{" +
+        return super.toString() +
                 "volume='" + volume + '\'' +
-                ", cal='" + cal + '\'' +
+                ", calories='" + calories + '\'' +
                 ", carbonic_acid=" + carbonic_acid +
                 '}';
     }
