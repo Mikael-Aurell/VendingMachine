@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 public class ProductDataImpl implements ProductData {
 
+    private int[] withdraw;
     private Product[] products;
     private int[] denominations; //arrays of valörer
     private String[] getAllProducts;
@@ -13,12 +14,15 @@ public class ProductDataImpl implements ProductData {
     private int amount;
 
     public ProductDataImpl(){
+        withdraw = new int[10];
         products = new Product[0];
         getAllProducts = new String[products.length];
-        denominations =new int[10];
-        depositPool = 0;
+        denominations = new int[]{1, 2, 5, 10, 20, 50, 100, 200, 500, 1000};
+        depositPool = 2001;
         amount =0;
     }
+
+
 
     @Override
     public Product AddProduct(Product product){
@@ -68,15 +72,32 @@ public class ProductDataImpl implements ProductData {
 
 
     @Override //Returns change and resets the deposit pool
-    public int EndSession(){
+    public int[] EndSession(){
+        withdraw= GenerateWithdraw(depositPool);
         if (depositPool == 0) {
-            return depositPool;
+            return withdraw;
         } else {
             int returnMoney = depositPool;
             depositPool = 0;
-            return returnMoney;
+            return withdraw;
         }
+    }
 
+    //Generate withdraw array from depositPool
+    public int[] GenerateWithdraw(int depositPool){
+        if (depositPool != 0){
+            int tempPool = depositPool;
+            for (int i=9;i>=0;i--){
+                if(tempPool >= denominations[i]){
+                    withdraw[i]= withdraw[i]+denominations[i];
+                    tempPool = tempPool - denominations[i];
+                    if(tempPool >= denominations[i]){
+                        i++;
+                    }
+                }
+            }
+        }
+        return withdraw;
     }
 
     @Override //View a product description
