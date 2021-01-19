@@ -17,7 +17,7 @@ public class Food extends Product {
 
     @Override
     public String Examine(){
-        return "Name: " + getName() + " " +
+        return "Name: " + getProductName() + " " +
                 "Price " + getPrice() + " " +
                 "Calories " + getCalories() + " " +
                 "Protein" + getProteinType();

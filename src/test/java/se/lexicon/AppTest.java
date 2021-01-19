@@ -1,14 +1,12 @@
 package se.lexicon;
-
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.lexicon.data.ProductData;
-import se.lexicon.data.ProductDataImpl;
-import se.lexicon.model.Drink;
-import se.lexicon.model.Food;
-import se.lexicon.model.Product;
-import se.lexicon.model.Snack;
+
+import se.lexicon.model.*;
+import se.lexicon.data.*;
+
 
 
 import static se.lexicon.model.Protein.CHICKEN;
@@ -16,28 +14,73 @@ import static se.lexicon.model.SnackType.BAR;
 
 
 public class AppTest {
+    private String noMoneyErrorMsg;
+    private Drink aCoke;
+    private Food aChickenBaguette;
+    private Snack aSnickers;
+    private String[] getProducts;
+
     ProductData productData = new ProductDataImpl();
 
+
     @Before
-    Drink aCoke = new Drink();
-        aCoke.setName("Coke");
-        aCoke.setPrice(15);
-        aCoke.setVolume("33 cl");
-        aCoke.setCalories("105 kcal");
-        aCoke.setCarbonic_acid(true);
+    public void productImport () {
+        noMoneyErrorMsg = "There is not enough money, please add more money.";
 
-    Food aChickenBaguette = new Food();
-        aChickenBaguette.setName("Chicken Baguette");
-        aChickenBaguette.setPrice(50);
-        aChickenBaguette.setProteinType(CHICKEN);
-        aChickenBaguette.setCalories("402 kcal");
+        aCoke = new Drink(1, "Coke", 15, "33 cl", "105 kcal", true);
+        aChickenBaguette = new Food(2, "Chicken Baguette", 50, "402 kcal", CHICKEN);
+        aSnickers = new Snack(3, "Snickers", 10, "25 %", 1, BAR);
 
-    Snack aSnickers = new Snack();
-        aSnickers.setName("Snickers");
-        aSnickers.setPrice(10);
-        aSnickers.setSnackType(BAR);
 
-        productData.AddProduct(aCoke); //id=1
-        productData.AddProduct(aChickenBaguette); //id=2
-        productData.AddProduct(aSnickers); //id=3
+        productData.AddProduct(aCoke);
+        productData.AddProduct(aChickenBaguette);
+        productData.AddProduct(aSnickers);
+
+        getProducts = new String[3];
+
+        getProducts[0]= "1. Coke 15 SEK";
+        getProducts[1]= "2. Chicken Baguette 50 SEK";
+        getProducts[2]= "3. Snickers 10 SEK";
+    }
+
+    @Test
+    public void Test_Add_Products(){
+        Assert.assertEquals(aCoke.toString(), productData.GetDescription(1));
+    }
+
+    @Test
+    public void Test_Get_Description_For_a_Single_Product(){
+        Assert.assertEquals(aSnickers.toString(), productData.GetDescription(3));
+    }
+
+    @Test
+    public void Test_Get_Products(){
+        Assert.assertArrayEquals(getProducts ,productData.GetProducts());
+
+    }
+
+    @Test
+    public void Test_Add_Balance(){
+        productData.AddCurrency(400);
+        Assert.assertEquals(400,productData.GetBalance());
+    }
+
+    @Test
+    public void Test_Try_To_Buy_With_No_Money(){
+        productData.AddCurrency(49);
+        Assert.assertEquals(null, productData.Request(2));
+    }
+
+    @Test
+    public void Test_Buy_Products(){
+        productData.AddCurrency(100);
+        Assert.assertEquals(aChickenBaguette.getProductName(), productData.Request(2).getProductName());
+    }
+
+    @Test
+    public void Test_EndSession(){
+        productData.AddCurrency(400);
+        Assert.assertEquals(400, productData.EndSession());
+
+    }
 }

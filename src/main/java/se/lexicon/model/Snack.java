@@ -21,7 +21,7 @@ public class Snack extends Product {
 
     @Override
     public String Examine(){
-        return "Name: " + getName() + " " +
+        return "Name: " + getProductName() + " " +
                 "Price " + getPrice() + " " +
                 "SugarPercent " + getSugarPercent() + " " +
                 "Type of Snack" + getSnackType();

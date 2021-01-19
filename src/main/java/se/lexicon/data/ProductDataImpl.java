@@ -1,18 +1,12 @@
 package se.lexicon.data;
 
-import se.lexicon.model.Drink;
-import se.lexicon.model.Food;
 import se.lexicon.model.Product;
-import se.lexicon.model.Snack;
 
 import java.util.Arrays;
 
-import static se.lexicon.model.Protein.CHICKEN;
-import static se.lexicon.model.SnackType.BAR;
-
 public class ProductDataImpl implements ProductData {
 
-    private int[] withdraw;
+    private int withdraw;
     private Product[] products;
     private int[] denominations; //arrays of valörer
     private String[] getAllProducts;
@@ -20,7 +14,7 @@ public class ProductDataImpl implements ProductData {
     private int amount;
 
     public ProductDataImpl(){
-        withdraw = new int[10];
+        withdraw = 0;
         products = new Product[0];
         denominations = new int[]{1, 2, 5, 10, 20, 50, 100, 200, 500, 1000};
         depositPool = 0;
@@ -42,20 +36,27 @@ public class ProductDataImpl implements ProductData {
                 if(depositPool >= products[i].getPrice()){
                     depositPool = depositPool - products[i].getPrice();
                     indexOfProduct = i;
+                    System.out.println(products[i].Use());
                 }
                 else {
-                    System.out.println("There is not enough money, please add more money");
+                    System.out.println("There is not enough money, please add more money.");
+                    indexOfProduct = -1;
                 }
                 break;
             }
         }
-        return products[indexOfProduct];
+        if (indexOfProduct > 0) {
+            return products[indexOfProduct];
+        }
+        else {
+            return null;
+        }
     }
 
 
     @Override //Returns change and resets the deposit pool
-    public int[] EndSession(){
-        withdraw= GenerateWithdraw(depositPool);
+    public int EndSession(){
+        withdraw = depositPool;
         if (depositPool != 0) {
             int returnMoney = depositPool;
             depositPool = 0;
@@ -64,7 +65,7 @@ public class ProductDataImpl implements ProductData {
     }
 
     //Generate withdraw array from depositPool
-    public int[] GenerateWithdraw(int depositPool){
+    /*public int[] GenerateWithdraw(int depositPool){
         if (depositPool != 0){
             int tempPool = depositPool;
             for (int i=9;i>=0;i--){
@@ -78,7 +79,7 @@ public class ProductDataImpl implements ProductData {
             }
         }
         return withdraw;
-    }
+    }*/
 
     @Override //View a product description
     public String GetDescription (int productNumber){
@@ -103,7 +104,7 @@ public class ProductDataImpl implements ProductData {
         getAllProducts = new String[products.length];
         for(int i=0;i< products.length;i++){
             getAllProducts[i]= (products[i].getProductNumber())+"." + " "
-                    + products[i].getName() + " "
+                    + products[i].getProductName() + " "
                     + products[i].getPrice() +" SEK";
             }
         return getAllProducts;

@@ -21,20 +21,20 @@ public class App
         ProductData productData = new ProductDataImpl();
 
         Drink aCoke = new Drink();
-        aCoke.setName("Coke");
+        aCoke.setProductName("Coke");
         aCoke.setPrice(15);
         aCoke.setVolume("33 cl");
         aCoke.setCalories("105 kcal");
         aCoke.setCarbonic_acid(true);
 
         Food aChickenBaguette = new Food();
-        aChickenBaguette.setName("Chicken Baguette");
+        aChickenBaguette.setProductName("Chicken Baguette");
         aChickenBaguette.setPrice(50);
         aChickenBaguette.setProteinType(CHICKEN);
         aChickenBaguette.setCalories("402 kcal");
 
         Snack aSnickers = new Snack();
-        aSnickers.setName("Snickers");
+        aSnickers.setProductName("Snickers");
         aSnickers.setPrice(10);
         aSnickers.setSnackType(BAR);
 
@@ -52,7 +52,7 @@ public class App
             System.out.println("### 3. Show All Products");
             System.out.println("### 4. Buy a Product");
             System.out.println("### 5. View Single Product Description");
-            System.out.println("### 0. End Session (CASH OUT");
+            System.out.println("### 0. End Session (CASH OUT)");
 
             Scanner scanner = new Scanner(System.in);
             System.out.println("Enter a valid operation number: ");
@@ -77,10 +77,17 @@ public class App
                     break;
 
                 case "4":
-                    System.out.println(Arrays.toString(productData.GetProducts()));
-                    Scanner scChooseProductToBuy = new Scanner(System.in);
-                    System.out.println("Type the number of the product you want to buy: ");
-                    Product theProductToBuy = productData.Request(scChooseProductToBuy.nextInt());
+                    if(productData.GetBalance() > 0) {
+                        System.out.println(Arrays.toString(productData.GetProducts()));
+                        Scanner scChooseProductToBuy = new Scanner(System.in);
+                        System.out.println("Type the number of the product you want to buy: ");
+                        Product theProductToBuy = productData.Request(scChooseProductToBuy.nextInt());
+                        if (theProductToBuy != null)
+                            System.out.println(theProductToBuy.Use());
+                    } else {
+                        System.out.println("Your balance is "+productData.GetBalance()+" SEK. Please deposit more money");
+                        System.out.println();
+                    }
                     break;
 
                 case "5":
@@ -91,10 +98,7 @@ public class App
                     break;
 
                 case "0":
-                    int withdraw[] = productData.EndSession();
-                    System.out.println("The denominations are: ");
-                    for(int i=0;i<withdraw.length;i++)
-                    System.out.println(withdraw[i]+"kr");
+                    System.out.println("Your withdraw is: " + productData.EndSession()+"kr.");
                     break;
 
                 default:
