@@ -1,8 +1,14 @@
 package se.lexicon.data;
 
+import se.lexicon.model.Drink;
+import se.lexicon.model.Food;
 import se.lexicon.model.Product;
+import se.lexicon.model.Snack;
 
 import java.util.Arrays;
+
+import static se.lexicon.model.Protein.CHICKEN;
+import static se.lexicon.model.SnackType.BAR;
 
 public class ProductDataImpl implements ProductData {
 
@@ -16,39 +22,9 @@ public class ProductDataImpl implements ProductData {
     public ProductDataImpl(){
         withdraw = new int[10];
         products = new Product[0];
-        getAllProducts = new String[products.length];
         denominations = new int[]{1, 2, 5, 10, 20, 50, 100, 200, 500, 1000};
-        depositPool = 2001;
+        depositPool = 0;
         amount =0;
-    }
-
-
-
-    @Override
-    public Product AddProduct(Product product){
-        // checks the input data
-        if (product == null) { return null; }
-        if(checksForDuplicateId(product)){return null; }
-
-        //Clones the existing product array
-        Product[] newProductArray = Arrays.copyOf(products, products.length +1);
-        //Add new product
-        newProductArray[newProductArray.length-1]=product;
-        //Overwrite product array
-        products = newProductArray;
-
-        return product;
-    }
-        //Help method for AddProduct
-        private boolean checksForDuplicateId(Product input){
-            boolean productExist = false;
-            for (Product product: products) {
-                if(product.getProductNumber() == input.getProductNumber()){
-                    productExist = true;
-                    break;
-                }
-            }
-            return productExist;
     }
 
     @Override //Add to the deposit pool (moneyPool)
@@ -58,12 +34,18 @@ public class ProductDataImpl implements ProductData {
         }
     }
 
-    @Override //Buy a Product
+    @Override //Buy Product
     public Product Request(int productNumber){
         int indexOfProduct=0;
-        for(int i=0;i>0;i++){
+        for(int i=0;i<products.length;i++){
             if(products[i].getProductNumber() == productNumber){
-                indexOfProduct = i;
+                if(depositPool >= products[i].getPrice()){
+                    depositPool = depositPool - products[i].getPrice();
+                    indexOfProduct = i;
+                }
+                else {
+                    System.out.println("There is not enough money, please add more money");
+                }
                 break;
             }
         }
@@ -74,13 +56,11 @@ public class ProductDataImpl implements ProductData {
     @Override //Returns change and resets the deposit pool
     public int[] EndSession(){
         withdraw= GenerateWithdraw(depositPool);
-        if (depositPool == 0) {
-            return withdraw;
-        } else {
+        if (depositPool != 0) {
             int returnMoney = depositPool;
             depositPool = 0;
-            return withdraw;
         }
+        return withdraw;
     }
 
     //Generate withdraw array from depositPool
@@ -103,7 +83,7 @@ public class ProductDataImpl implements ProductData {
     @Override //View a product description
     public String GetDescription (int productNumber){
         int indexOfProduct=0;
-        for(int i=0;i>0;i++){
+        for(int i=0;i<products.length;i++){
             if(products[i].getProductNumber() == productNumber){
                 indexOfProduct = i;
                 break;
@@ -120,10 +100,39 @@ public class ProductDataImpl implements ProductData {
 
     @Override //Returns all Products names and product numbers
     public String[] GetProducts() {
-        getAllProducts[0]="ProductName"+"\t"+"ProductNumber";
-        for(int i=1;i> products.length;i++){
-            getAllProducts[i]=products[i].getName()+"\t"+(products[i].getProductNumber());
+        getAllProducts = new String[products.length];
+        for(int i=0;i< products.length;i++){
+            getAllProducts[i]= (products[i].getProductNumber())+"." + " "
+                    + products[i].getName() + " "
+                    + products[i].getPrice() +" SEK";
             }
         return getAllProducts;
+    }
+
+    @Override
+    public Product AddProduct(Product product){
+        // checks the input data
+        if (product == null) { return null; }
+        if(checksForDuplicateId(product)){return null; }
+
+        //Clones the existing product array
+        Product[] newProductArray = Arrays.copyOf(products, products.length +1);
+        //Add new product
+        newProductArray[newProductArray.length-1]=product;
+        //Overwrite product array
+        products = newProductArray;
+
+        return product;
+    }
+    //Help method for AddProduct
+    private boolean checksForDuplicateId(Product input){
+        boolean productExist = false;
+        for (Product product: products) {
+            if(product.getProductNumber() == input.getProductNumber()){
+                productExist = true;
+                break;
+            }
+        }
+        return productExist;
     }
 }
